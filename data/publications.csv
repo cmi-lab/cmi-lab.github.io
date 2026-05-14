@@ -1,0 +1,11 @@
+year,venue,highlight,highlight_en,title,authors,abstract,pdf,code,extra_label,extra_url
+2026,CVPR,最佳论文候选,Best Paper Cand.,Open-World Causal Cross-Modal Alignment for Foundation Models,"Siyuan Lin, Zhaoming Chen, Lu Gao, Yan Song, *Zhendong Mao*",提出一种新的因果对齐范式 CCMA，在开放世界场景下显式建模视觉与语言间的因果关系。,,,,
+2026,ICML,,,Distill-and-Sample: Fast Inference for Cross-Modal Diffusion Models,"Nan Jiang, *Bo Hu*, Beizhou Wen, Zhendong Mao",针对跨模态扩散模型的协同蒸馏与采样框架，推理步数从 50 步压缩至 4 步。,,,,
+2026,ICML,口头报告,Oral,MIRA-Base v2: A Unified Retrieval Backbone for Image Video Audio and Text,"Lu Gao, Yue Han, *Quan Wang*, Zhendong Mao",提出统一四模态检索骨干，通过共享 token 化与轻量化对齐头实现跨模态高效检索。,,,,
+2025,NeurIPS,聚光报告,Spotlight,Temporal Grounding by Causal Chain-of-Thought in Long Videos,"*Weidong Chen*, Zhiyuan Qin, Yan Song, Zhendong Mao",面向长视频时序定位任务，提出基于因果链式推理的多步分解方法。,,,,
+2025,ICCV,亮点报告,Highlight,Controllable 3D Generation with Text-Driven Geometry Priors,"Qingchen Luo, *Bo Hu*, Beizhou Wen, Zhendong Mao",将文本驱动的几何先验融入三维生成流程，支持对形状、拓扑与材质的细粒度控制。,,,,
+2025,ACL,,,Bridging Vision and Language with Knowledge-Augmented Prompting,"Yiming Peng, *Yan Song*, Quan Wang, Zhendong Mao",提出知识增强的视觉-语言提示框架 KVL-Prompt。,,,,
+2024,CVPR,,,Robust Invisible Watermarking against Generative Model Editing,"Fan Xie, *Lei Zhang*, Zhendong Mao",面向生成式模型编辑攻击场景的隐式水印方案。,,,,
+2024,ACM MM,最佳论文,Best Paper,Toward Unified Cross-Media Foundation Models,"*Zhendong Mao*, Quan Wang, Bo Hu, Yan Song, Lei Zhang, Weidong Chen",系统性回顾跨媒体基础模型的发展脉络与关键挑战。,,,,
+2024,NeurIPS,,,Hierarchical Contrastive Learning for Vision-Language Pretraining,"Mingyuan Zheng, *Zhendong Mao*, Quan Wang",提出层次化对比学习目标，从局部 patch、对象、全局三级别构建跨模态对齐。,,,,
+2023,CVPR,,,Compositional Video Grounding with Concept Pruning,"Jingxing Qian, *Weidong Chen*, Zhendong Mao",面向组合性视频问答，提出概念剪枝机制。,,,,

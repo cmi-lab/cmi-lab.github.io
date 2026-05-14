@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>研究 · 跨媒体智能课题组</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="inner">
+    <a href="index.html" class="brand" id="nav-brand"></a>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="research.html" class="active">研究</a></li>
+      <li class="has-sub">
+        <a href="team.html">团队</a>
+        <ul class="sub">
+          <li><a href="team.html#advisors">导师 Advisors</a></li>
+          <li><a href="team.html#students">学生 Students</a></li>
+          <li><a href="team.html#alumni">校友 Alumni</a></li>
+        </ul>
+      </li>
+      <li><a href="publications.html">成果</a></li>
+      <li><a href="https://github.com/cmi-lab" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page">
+  <header class="page-head">
+    <h1>研究方向 <span class="en">Research</span></h1>
+    <p class="lede" id="page-lede"></p>
+  </header>
+  <div id="research-content"></div>
+</main>
+
+<footer class="site-foot">
+  <div class="inner" id="footer-inner"></div>
+</footer>
+
+<script src="assets/csv-loader.js"></script>
+<script>
+(async function(){
+  const cfg = await CMI.loadSiteConfig();
+  const research = await CMI.loadCSV('research.csv');
+
+  document.getElementById('nav-brand').innerHTML =
+    cfg.lab_name.zh + ' <span class="en">' + cfg.lab_short.en + '</span>';
+
+  document.getElementById('page-lede').textContent =
+    '课题组当前的研究围绕「跨媒体智能」展开，关注模态间的统一表征、可控生成、复杂场景下的检索与理解，以及 AIGC 时代下的内容安全。';
+
+  const container = document.getElementById('research-content');
+  research.forEach(r => {
+    const keywords = r.keywords.split(';').map(k=>'<span class="k">'+k.trim()+'</span>').join('');
+    container.innerHTML += '<article class="dir">' +
+      '<div class="figure"><span class="num">'+r.id+'</span></div>' +
+      '<div><h3>'+r.name_zh+'</h3><div class="en-sub">'+r.name_en+'</div>' +
+      '<p>'+r.description+'</p>' +
+      '<div class="kw"><span class="label">关键词 <em>Keywords</em></span>'+keywords+'</div>' +
+      '</div></article>';
+  });
+
+  document.getElementById('footer-inner').innerHTML =
+    '<span>© '+new Date().getFullYear()+' '+cfg.lab_name.zh+' · <a href="https://ustc.edu.cn" target="_blank" rel="noopener">中国科学技术大学</a></span>' +
+    '<span>'+cfg.address.zh+' · <a href="mailto:'+cfg.email.zh+'">'+cfg.email.zh+'</a></span>';
+})();
+</script>
+</body>
+</html>

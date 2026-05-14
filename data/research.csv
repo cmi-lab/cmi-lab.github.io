@@ -1,0 +1,5 @@
+id,name_zh,name_en,description,keywords
+01,多模态预训练与对齐,Multi-modal Pretraining & Alignment,面向开放世界的多模态统一表征，包括跨模态对齐范式、视觉语言模型架构、低资源场景下的高效预训练与微调方法。,跨模态对齐;视觉语言模型;高效微调;统一表征
+02,生成式跨模态智能,Generative Cross-modal Intelligence,可控图像与视频生成、文本驱动的三维内容创作、高效扩散模型采样，以及面向真实世界场景的生成式交互应用。,扩散模型;可控生成;三维视觉;文本到视频
+03,跨模态检索与理解,Cross-modal Retrieval & Understanding,面向图、文、视频、音频的统一检索框架，长视频时序理解与定位，以及复杂场景下的跨模态问答与推理。,跨模态检索;视频理解;多模态推理;视频问答
+04,多媒体内容安全,Multimedia Content Security,面向 AIGC 时代的内容真实性鉴别、鲁棒水印、对抗样本与防御，以及多模态模型的安全可控部署。,鲁棒水印;AIGC 检测;对抗鲁棒;隐写分析;模型安全

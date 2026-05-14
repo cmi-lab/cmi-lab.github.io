@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title id="doc-title">个人主页 · 跨媒体智能课题组</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/styles.css"/>
+<style>
+.profile-head{display:grid;grid-template-columns:180px 1fr;gap:40px;margin-bottom:48px;align-items:start}
+.profile-head .avatar{width:160px;height:160px}
+.profile-head h1{margin:0;font-family:var(--serif);font-weight:600;font-size:30px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.profile-head h1 .en{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase}
+.profile-head .role{font-size:14px;color:var(--ink-2);margin-top:6px}
+.profile-head .lede{font-family:var(--serif);font-size:15px;color:var(--ink-2);line-height:1.85;margin-top:14px;max-width:640px}
+.profile-head .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:6px 24px;font-size:13px;color:var(--ink-2)}
+.profile-head .meta .item{display:flex;gap:8px;align-items:baseline}
+.profile-head .meta .k{font-size:12px;color:var(--muted);letter-spacing:.02em}
+.profile-head .meta .k em{font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-left:4px;opacity:.75}
+.profile-head .meta a{border-bottom:1px dotted var(--hair)}
+.profile-head .meta a:hover{border-color:var(--link)}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{display:grid;grid-template-columns:130px 1fr;gap:24px;padding:10px 0;border-bottom:1px solid var(--hair)}
+.timeline li:last-child{border-bottom:none}
+.timeline .when{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.timeline .what{font-size:14px;color:var(--ink-2);line-height:1.7}
+.timeline .what strong{color:var(--ink);font-family:var(--serif);font-weight:600}
+.pub-mini{list-style:none;margin:0;padding:0}
+.pub-mini li{padding:12px 0;border-bottom:1px solid var(--hair);display:grid;grid-template-columns:100px 1fr;gap:16px}
+.pub-mini li:last-child{border-bottom:none}
+.pub-mini .yv{font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:2px}
+.pub-mini .ttl{font-family:var(--serif);font-size:15px;line-height:1.5;margin:0 0 4px}
+.pub-mini .au{font-size:13px;color:var(--ink-2)}
+.pub-mini .au strong{color:var(--ink);font-weight:600}
+.list-plain{list-style:none;margin:0;padding:0}
+.list-plain li{padding:10px 0;border-bottom:1px solid var(--hair);display:grid;grid-template-columns:130px 1fr;gap:24px;font-size:14px;color:var(--ink-2)}
+.list-plain li:last-child{border-bottom:none}
+.list-plain .when{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.list-plain .what strong{color:var(--ink);font-family:var(--serif);font-weight:600}
+.back-link{display:inline-block;margin-bottom:28px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+.back-link:hover{color:var(--link);text-decoration:none}
+@media(max-width:720px){
+  .profile-head{grid-template-columns:1fr;gap:20px}
+  .timeline li,.list-plain li,.pub-mini li{grid-template-columns:1fr;gap:4px}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="inner">
+    <a href="../index.html" class="brand" id="nav-brand"></a>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="../research.html">研究</a></li>
+      <li class="has-sub">
+        <a href="../team.html" class="active">团队</a>
+        <ul class="sub">
+          <li><a href="../team.html#advisors">导师 Advisors</a></li>
+          <li><a href="../team.html#students">学生 Students</a></li>
+          <li><a href="../team.html#alumni">校友 Alumni</a></li>
+        </ul>
+      </li>
+      <li><a href="../publications.html">成果</a></li>
+      <li><a href="https://github.com/cmi-lab" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page">
+  <a href="../team.html#advisors" class="back-link">← 返回团队页</a>
+  <header class="profile-head" id="profile-head"></header>
+  <div id="profile-sections"></div>
+</main>
+
+<footer class="site-foot">
+  <div class="inner" id="footer-inner"></div>
+</footer>
+
+<script src="../assets/csv-loader.js" data-base="../"></script>
+<script>
+(async function(){
+  const personId = location.pathname.split('/').pop().replace('.html','');
+  const base = '../data/people/' + personId + '/';
+
+  async function loadPersonCSV(filename){
+    const resp = await fetch(base + filename);
+    if(!resp.ok) return [];
+    return CMI.csvParse(await resp.text());
+  }
+
+  async function loadPersonKV(filename){
+    const resp = await fetch(base + filename);
+    if(!resp.ok) return {};
+    const text = await resp.text();
+    const obj = {};
+    text.trim().split('\n').forEach(line => {
+      const idx = line.indexOf(',');
+      if(idx>0) obj[line.slice(0,idx).trim()] = line.slice(idx+1).trim();
+    });
+    return obj;
+  }
+
+  const cfg = await CMI.loadSiteConfig();
+  const info = await loadPersonKV('info.csv');
+  const bio = await loadPersonCSV('bio.csv');
+  const pubs = await loadPersonCSV('pubs.csv');
+  const honors = await loadPersonCSV('honors.csv');
+  const service = await loadPersonCSV('service.csv');
+
+  document.getElementById('nav-brand').innerHTML =
+    cfg.lab_name.zh + ' <span class="en">' + cfg.lab_short.en + '</span>';
+  document.title = (info.name_zh||personId) + ' · ' + cfg.lab_name.zh;
+
+  const head = document.getElementById('profile-head');
+  const photoHtml = info.photo
+    ? '<img src="'+info.photo+'" alt="'+info.name_zh+'">'
+    : '<span>[ 照片 · '+info.name_zh+' ]</span>';
+
+  let metaHtml = '';
+  if(info.email) metaHtml += '<div class="item"><span class="k">邮箱 <em>Email</em></span><a href="mailto:'+info.email+'">'+info.email+'</a></div>';
+  if(info.office) metaHtml += '<div class="item"><span class="k">办公 <em>Office</em></span><span>'+info.office+'</span></div>';
+  if(info.scholar) metaHtml += '<div class="item"><span class="k">学术 <em>Scholar</em></span><a href="'+info.scholar+'" target="_blank">Google Scholar</a></div>';
+  if(info.dblp) metaHtml += '<div class="item"><span class="k">档案 <em>DBLP</em></span><a href="'+info.dblp+'" target="_blank">dblp.org</a></div>';
+
+  let ledeHtml = '';
+  ['bio_1','bio_2','bio_3'].forEach(k => { if(info[k]) ledeHtml += '<p class="lede">'+info[k]+'</p>'; });
+
+  head.innerHTML =
+    '<div class="avatar">'+photoHtml+'</div>' +
+    '<div><h1>'+info.name_zh+' <span class="en">'+(info.name_en||'')+'</span></h1>' +
+    '<div class="role">'+(info.role||'')+'</div>' +
+    ledeHtml +
+    '<div class="meta">'+metaHtml+'</div></div>';
+
+  const sections = document.getElementById('profile-sections');
+
+  if(bio.length){
+    let html = '<section class="block"><h2>学习与工作 <span class="en">Biography</span></h2><ul class="timeline">';
+    bio.forEach(b => { html += '<li><span class="when">'+b.when+'</span><span class="what">'+b.what+'</span></li>'; });
+    html += '</ul></section>';
+    sections.innerHTML += html;
+  }
+
+  if(pubs.length){
+    let html = '<section class="block"><h2>代表论文 <span class="en">Selected Publications</span> <a href="../publications.html" class="count">查看全部 →</a></h2><ul class="pub-mini">';
+    pubs.forEach(p => {
+      const au = p.authors.replace(/\*([^*]+)\*/g,'<strong>$1</strong>');
+      html += '<li><div class="yv">'+p.venue+'</div><div><p class="ttl">'+p.title+'</p><p class="au">'+au+'</p></div></li>';
+    });
+    html += '</ul></section>';
+    sections.innerHTML += html;
+  }
+
+  if(honors.length){
+    let html = '<section class="block"><h2>奖励与荣誉 <span class="en">Honors & Awards</span></h2><ul class="list-plain">';
+    honors.forEach(h => { html += '<li><span class="when">'+h.year+'</span><span class="what">'+h.what+'</span></li>'; });
+    html += '</ul></section>';
+    sections.innerHTML += html;
+  }
+
+  if(service.length){
+    let html = '<section class="block"><h2>学术任职 <span class="en">Academic Services</span></h2><ul class="list-plain">';
+    service.forEach(s => { html += '<li><span class="when">'+s.when+'</span><span class="what">'+s.what+'</span></li>'; });
+    html += '</ul></section>';
+    sections.innerHTML += html;
+  }
+
+  document.getElementById('footer-inner').innerHTML =
+    '<span>© '+new Date().getFullYear()+' '+cfg.lab_name.zh+' · <a href="https://ustc.edu.cn" target="_blank" rel="noopener">中国科学技术大学</a></span>' +
+    '<span>'+cfg.address.zh+' · <a href="mailto:'+cfg.email.zh+'">'+cfg.email.zh+'</a></span>';
+})();
+</script>
+</body>
+</html>

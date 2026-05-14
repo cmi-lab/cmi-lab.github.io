@@ -1,0 +1,7 @@
+date,tag,tag_en,highlight,title,detail
+2026-04-28,获奖,Award,true,课题组论文获 CVPR 2026 Best Paper Candidate,关于「面向开放世界的跨模态因果对齐」的工作在 CVPR 2026 入选最佳论文候选。
+2026-03-15,论文,Publication,false,5 篇论文被 ICML 2026 接收,涵盖多模态预训练、视频理解、扩散模型加速、跨模态检索与文本到视频生成等方向。
+2026-02-02,招生,Recruiting,false,2026 年博士、硕士招生信息发布,面向推免与统考招生开放，欢迎感兴趣的同学联系交流。
+2026-01-10,讲座,Talk,false,毛震东教授在 AAAI'26 Workshop 作特邀报告,报告题目：Toward Unified Cross-Media Foundation Models。
+2025-12-20,发布,Release,false,开源跨模态检索基线 MIRA-Base v2.0,支持图像、视频、音频、文本四模态统一检索。
+2025-11-02,获奖,Award,false,陈伟东博士获中科院院长奖优秀奖,

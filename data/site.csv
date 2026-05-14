@@ -1,0 +1,12 @@
+key,zh,en
+lab_name,跨媒体智能课题组,Cross-Media Intelligence Lab
+lab_short,CMI Lab,CMI Lab
+affiliation,中国科学技术大学 · 信息科学技术学院,University of Science and Technology of China
+address,合肥市金寨路 96 号,96 Jinzhai Road Hefei China
+email,cmi-lab@ustc.edu.cn,cmi-lab@ustc.edu.cn
+github,https://github.com/cmi-lab,https://github.com/cmi-lab
+founded,2014,2014
+intro_1,课题组成立于 2014 年，由毛震东教授带领。我们关心人类感知信息在不同模态之间如何被统一理解，以及机器如何在此基础上生成可信、可控的跨媒体内容。,Founded in 2014 and led by Prof. Mao Zhendong. We study how perceptual information across modalities can be unified and how machines can generate trustworthy cross-media content.
+intro_2,近五年在 IEEE TPAMI、IJCV、CVPR、ICCV、NeurIPS、ACL、ACM Multimedia 等期刊会议发表论文百余篇，多次获得最佳论文/口头报告等奖项。,Over 100 papers published in top venues (TPAMI IJCV CVPR ICCV NeurIPS ACL ACM MM) in the past five years with multiple best paper awards.
+intro_3,我们欢迎对跨媒体智能、多模态大模型与生成式人工智能感兴趣的同学加入。,We welcome students interested in cross-media intelligence and generative AI.
+lede,隶属于中国科学技术大学信息科学技术学院，长期致力于跨媒体信息的统一表征、理解与生成。研究覆盖多模态预训练、视觉语言模型、生成式人工智能、跨模态检索与多媒体内容安全。,Affiliated with USTC School of Information Science and Technology. Research covers multi-modal pretraining vision-language models generative AI cross-modal retrieval and multimedia content security.

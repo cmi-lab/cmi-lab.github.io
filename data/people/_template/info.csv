@@ -1,0 +1,12 @@
+name_zh,（中文姓名）
+name_en,（English Name）
+role,（职称/身份，如：教授 · 博士生导师）
+photo,（照片路径，留空则显示占位符）
+email,（邮箱地址）
+office,（办公室位置）
+scholar,（Google Scholar 链接，可留空）
+dblp,（DBLP 链接，可留空）
+homepage,（个人外部主页链接，可留空）
+bio_1,（个人简介第一段）
+bio_2,（个人简介第二段，可留空）
+bio_3,（个人简介第三段，可留空）

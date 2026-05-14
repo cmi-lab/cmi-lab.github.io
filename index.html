@@ -1,1 +1,113 @@
-<p >welcome to CMI-Lab! </p>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>跨媒体智能课题组 · CMI Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="inner">
+    <a href="index.html" class="brand" id="nav-brand"></a>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">首页</a></li>
+      <li><a href="research.html">研究</a></li>
+      <li class="has-sub">
+        <a href="team.html">团队</a>
+        <ul class="sub">
+          <li><a href="team.html#advisors">导师 Advisors</a></li>
+          <li><a href="team.html#students">学生 Students</a></li>
+          <li><a href="team.html#alumni">校友 Alumni</a></li>
+        </ul>
+      </li>
+      <li><a href="publications.html">成果</a></li>
+      <li><a href="https://github.com/cmi-lab" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page">
+  <header class="page-head">
+    <h1 id="page-title"></h1>
+    <p class="lede" id="page-lede"></p>
+  </header>
+
+  <section class="intro">
+    <div id="intro-text"></div>
+    <aside class="meta-card">
+      <dl id="meta-dl"></dl>
+    </aside>
+  </section>
+
+  <section class="block">
+    <h2>最新动态 <span class="en">News</span></h2>
+    <ul class="news-list" id="news-list"></ul>
+  </section>
+
+  <section class="block">
+    <h2>研究方向 <span class="en">Research</span> <a href="research.html" class="count">了解更多 →</a></h2>
+    <ul class="dirs" id="dirs-list"></ul>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="inner" id="footer-inner"></div>
+</footer>
+
+<script src="assets/csv-loader.js"></script>
+<script>
+(async function(){
+  const cfg = await CMI.loadSiteConfig();
+  const news = await CMI.loadCSV('news.csv');
+  const research = await CMI.loadCSV('research.csv');
+
+  document.getElementById('nav-brand').innerHTML =
+    cfg.lab_name.zh + ' <span class="en">' + cfg.lab_short.en + '</span>';
+  document.getElementById('page-title').innerHTML =
+    cfg.lab_name.zh + ' <span class="en">' + cfg.lab_name.en + '</span>';
+  document.getElementById('page-lede').textContent = cfg.lede.zh;
+
+  const introDiv = document.getElementById('intro-text');
+  ['intro_1','intro_2','intro_3'].forEach(k => {
+    if (cfg[k]) { const p = document.createElement('p'); p.className='serif'; p.textContent=cfg[k].zh; introDiv.appendChild(p); }
+  });
+
+  const dl = document.getElementById('meta-dl');
+  const metaItems = [
+    ['创立','Founded', cfg.founded.zh],
+    ['单位','Affiliation', cfg.affiliation.zh],
+    ['地址','Address', cfg.address.zh],
+    ['邮箱','Email', '<a href="mailto:'+cfg.email.zh+'">'+cfg.email.zh+'</a>'],
+    ['代码','GitHub', '<a href="'+cfg.github.zh+'" target="_blank" rel="noopener">github.com/cmi-lab</a>']
+  ];
+  metaItems.forEach(([zh,en,val])=>{
+    dl.innerHTML += '<dt>'+zh+' <em>'+en+'</em></dt><dd>'+val+'</dd>';
+  });
+
+  const newsList = document.getElementById('news-list');
+  news.forEach(n => {
+    const dateStr = n.date.replace(/-/g,' · ').replace(/· 0/g,'· ');
+    const hlClass = n.highlight==='true' ? ' hl' : '';
+    newsList.innerHTML += '<li><span class="date">'+dateStr+'</span><div class="body"><span class="tag'+hlClass+'">'+n.tag+' <em>'+n.tag_en+'</em></span><strong>'+n.title+'</strong> '+n.detail+'</div></li>';
+  });
+
+  const dirsList = document.getElementById('dirs-list');
+  research.forEach(r => {
+    dirsList.innerHTML += '<li><span class="num">'+r.id+'</span><div><span class="name">'+r.name_zh+'</span><span class="en-label">'+r.name_en+'</span><span class="desc">'+r.description+'</span></div></li>';
+  });
+
+  document.getElementById('footer-inner').innerHTML =
+    '<span>© '+new Date().getFullYear()+' '+cfg.lab_name.zh+' · <a href="https://ustc.edu.cn" target="_blank" rel="noopener">中国科学技术大学</a></span>' +
+    '<span>'+cfg.address.zh+' · <a href="mailto:'+cfg.email.zh+'">'+cfg.email.zh+'</a></span>';
+})();
+</script>
+</body>
+</html>

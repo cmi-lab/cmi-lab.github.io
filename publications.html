@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>成果 · 跨媒体智能课题组</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="inner">
+    <a href="index.html" class="brand" id="nav-brand"></a>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="research.html">研究</a></li>
+      <li class="has-sub">
+        <a href="team.html">团队</a>
+        <ul class="sub">
+          <li><a href="team.html#advisors">导师 Advisors</a></li>
+          <li><a href="team.html#students">学生 Students</a></li>
+          <li><a href="team.html#alumni">校友 Alumni</a></li>
+        </ul>
+      </li>
+      <li><a href="publications.html" class="active">成果</a></li>
+      <li><a href="https://github.com/cmi-lab" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page">
+  <header class="page-head">
+    <h1>论文成果 <span class="en">Publications</span></h1>
+    <p class="lede" id="page-lede"></p>
+  </header>
+
+  <div class="filters">
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input id="q" type="text" placeholder="搜索标题、作者、会议或摘要"/>
+    </div>
+    <div class="grp" id="filter-year"></div>
+    <div class="grp" id="filter-venue"></div>
+  </div>
+
+  <ul class="papers" id="papers"></ul>
+  <div class="empty" id="empty">没有匹配的论文。</div>
+</main>
+
+<footer class="site-foot">
+  <div class="inner" id="footer-inner"></div>
+</footer>
+
+<script src="assets/csv-loader.js"></script>
+<script>
+(async function(){
+  const cfg = await CMI.loadSiteConfig();
+  const pubs = await CMI.loadCSV('publications.csv');
+
+  document.getElementById('nav-brand').innerHTML =
+    cfg.lab_name.zh + ' <span class="en">' + cfg.lab_short.en + '</span>';
+  document.getElementById('page-lede').textContent =
+    '近五年课题组共发表论文 180 余篇，以下为按时间倒序的代表性工作。可按年份、会议或关键词进行筛选与搜索。';
+
+  const years = [...new Set(pubs.map(p=>p.year))].sort((a,b)=>b-a);
+  const venues = [...new Set(pubs.map(p=>p.venue))];
+
+  const fyDiv = document.getElementById('filter-year');
+  fyDiv.innerHTML = '<span class="label">年份 <em>Year</em></span><button class="chip active" data-f="y" data-v="all">全部</button>';
+  years.forEach(y => { fyDiv.innerHTML += '<button class="chip" data-f="y" data-v="'+y+'">'+y+'</button>'; });
+
+  const fvDiv = document.getElementById('filter-venue');
+  fvDiv.innerHTML = '<span class="label">会议 <em>Venue</em></span><button class="chip active" data-f="v" data-v="all">全部</button>';
+  venues.forEach(v => { fvDiv.innerHTML += '<button class="chip" data-f="v" data-v="'+v+'">'+v+'</button>'; });
+
+  const list = document.getElementById('papers');
+  pubs.forEach(p => {
+    let hlHtml = '';
+    if (p.highlight) hlHtml = '<span class="v hl">'+p.highlight+(p.highlight_en?' <em>'+p.highlight_en+'</em>':'')+'</span>';
+    const authorsHtml = p.authors.replace(/\*([^*]+)\*/g,'<strong>$1</strong>');
+    let linksHtml = '';
+    if (p.pdf) linksHtml += '<a href="'+p.pdf+'">论文 <em>PDF</em></a>';
+    if (p.code) linksHtml += '<a href="'+p.code+'">代码 <em>Code</em></a>';
+    if (p.extra_url) linksHtml += '<a href="'+p.extra_url+'">'+p.extra_label+'</a>';
+
+    list.innerHTML += '<li data-y="'+p.year+'" data-v="'+p.venue+'">' +
+      '<div class="yv"><span class="y">'+p.year+'</span><span class="v">'+p.venue+'</span>'+hlHtml+'</div>' +
+      '<div class="paper"><h3>'+p.title+'</h3>' +
+      '<p class="authors">'+authorsHtml+'</p>' +
+      '<p class="abs">'+p.abstract+'</p>' +
+      (linksHtml ? '<div class="links">'+linksHtml+'</div>' : '') +
+      '</div></li>';
+  });
+
+  // filter logic
+  const state = {y:'all',v:'all',q:''};
+  const empty = document.getElementById('empty');
+  function apply(){
+    let shown=0;
+    [...list.children].forEach(li=>{
+      const y=li.dataset.y, v=li.dataset.v, t=li.textContent.toLowerCase();
+      const ok=(state.y==='all'||y===state.y)&&(state.v==='all'||v===state.v)&&(!state.q||t.includes(state.q));
+      li.style.display=ok?'':'none';
+      if(ok)shown++;
+    });
+    empty.classList.toggle('show',shown===0);
+  }
+  document.querySelectorAll('.chip').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const f=b.dataset.f,v=b.dataset.v;
+      document.querySelectorAll('.chip[data-f="'+f+'"]').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      state[f]=v;
+      apply();
+    });
+  });
+  document.getElementById('q').addEventListener('input',e=>{
+    state.q=e.target.value.toLowerCase().trim();
+    apply();
+  });
+
+  document.getElementById('footer-inner').innerHTML =
+    '<span>© '+new Date().getFullYear()+' '+cfg.lab_name.zh+' · <a href="https://ustc.edu.cn" target="_blank" rel="noopener">中国科学技术大学</a></span>' +
+    '<span>'+cfg.address.zh+' · <a href="mailto:'+cfg.email.zh+'">'+cfg.email.zh+'</a></span>';
+})();
+</script>
+</body>
+</html>

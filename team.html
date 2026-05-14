@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>团队 · 跨媒体智能课题组</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="inner">
+    <a href="index.html" class="brand" id="nav-brand"></a>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="research.html">研究</a></li>
+      <li class="has-sub">
+        <a href="team.html" class="active">团队</a>
+        <ul class="sub">
+          <li><a href="team.html#advisors">导师 Advisors</a></li>
+          <li><a href="team.html#students">学生 Students</a></li>
+          <li><a href="team.html#alumni">校友 Alumni</a></li>
+        </ul>
+      </li>
+      <li><a href="publications.html">成果</a></li>
+      <li><a href="https://github.com/cmi-lab" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page">
+  <header class="page-head">
+    <h1>团队成员 <span class="en">Team</span></h1>
+    <p class="lede" id="page-lede"></p>
+  </header>
+
+  <section class="block" id="advisors">
+    <h2>导师 <span class="en">Advisors</span> <span class="count" id="advisor-count"></span></h2>
+    <div id="advisor-list"></div>
+  </section>
+
+  <section class="block" id="students">
+    <h2>学生 <span class="en">Students</span> <span class="count" id="student-count"></span></h2>
+    <div id="student-list"></div>
+  </section>
+
+  <section class="block" id="alumni">
+    <h2>校友 <span class="en">Alumni</span> <span class="count" id="alumni-count"></span></h2>
+    <div id="alumni-list"></div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="inner" id="footer-inner"></div>
+</footer>
+
+<script src="assets/csv-loader.js"></script>
+<script>
+(async function(){
+  const cfg = await CMI.loadSiteConfig();
+  const [advisors, students, alumni] = await Promise.all([
+    CMI.loadCSV('advisors.csv'),
+    CMI.loadCSV('students.csv'),
+    CMI.loadCSV('alumni.csv')
+  ]);
+
+  document.getElementById('nav-brand').innerHTML =
+    cfg.lab_name.zh + ' <span class="en">' + cfg.lab_short.en + '</span>';
+  document.getElementById('page-lede').textContent =
+    '课题组现有教师 '+advisors.length+' 位、博士与硕士研究生 '+students.length+' 名。我们重视开放、协作与互助的学术氛围。';
+  document.getElementById('advisor-count').textContent = String(advisors.length).padStart(2,'0');
+  document.getElementById('student-count').textContent = String(students.length).padStart(2,'0');
+  document.getElementById('alumni-count').textContent = String(alumni.length).padStart(2,'0');
+
+  const advList = document.getElementById('advisor-list');
+  advisors.forEach(a => {
+    const nameLink = a.page ? '<a href="'+a.page+'">'+a.name_zh+'</a>' : a.name_zh;
+    const photoHtml = a.photo
+      ? '<img src="'+a.photo+'" alt="'+a.name_zh+'">'
+      : '<span>[ 照片 ]</span>';
+    advList.innerHTML +=
+      '<div class="advisor"><div class="avatar">'+photoHtml+'</div><div>' +
+      '<h3>'+nameLink+' <span class="en">'+a.name_en+'</span></h3>' +
+      '<div class="role">'+a.role+'</div>' +
+      '<p class="bio">'+a.bio+'</p>' +
+      '<dl><dt>方向</dt><dd>'+a.research+'</dd>' +
+      '<dt>邮箱</dt><dd><a href="mailto:'+a.email+'">'+a.email+'</a></dd>' +
+      '<dt>办公</dt><dd>'+a.office+'</dd>' +
+      '<dt>荣誉</dt><dd>'+a.honors+'</dd></dl>' +
+      '</div></div>';
+  });
+
+  const stuList = document.getElementById('student-list');
+  const groups = {};
+  students.forEach(s => {
+    const key = s.level;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(s);
+  });
+  const levelOrder = ['博士','硕士','本科'];
+  const levelEn = {'博士':'Doctoral','硕士':'Master','本科':'Undergraduate'};
+  levelOrder.forEach(lv => {
+    if (!groups[lv]) return;
+    const arr = groups[lv];
+    stuList.innerHTML += '<div class="subgrp">'+lv+'研究生 '+levelEn[lv]+' · '+String(arr.length).padStart(2,'0')+' 人</div>';
+    let grid = '<div class="students">';
+    arr.forEach(s => {
+      const photoHtml = s.photo
+        ? '<img src="'+s.photo+'" alt="'+s.name_zh+'">'
+        : '<span>[ 照片 ]</span>';
+      grid += '<div class="student"><div class="avatar">'+photoHtml+'</div>' +
+        '<div class="nm">'+s.name_zh+'</div>' +
+        '<div class="area">'+s.level+s.grade+'<br/>'+s.research+'</div>' +
+        '<a class="mail" href="mailto:'+s.email+'">'+s.email+'</a></div>';
+    });
+    grid += '</div>';
+    stuList.innerHTML += grid;
+  });
+
+  const alumniList = document.getElementById('alumni-list');
+  let table = '<table class="alumni"><thead><tr><th>姓名</th><th>身份</th><th>年份</th><th>去向</th></tr></thead><tbody>';
+  alumni.forEach(a => {
+    table += '<tr><td class="nm">'+a.name_zh+'</td><td class="deg">'+a.degree+'</td><td class="yr">'+a.year+'</td><td>'+a.destination+'</td></tr>';
+  });
+  table += '</tbody></table>';
+  alumniList.innerHTML = table;
+
+  document.getElementById('footer-inner').innerHTML =
+    '<span>© '+new Date().getFullYear()+' '+cfg.lab_name.zh+' · <a href="https://ustc.edu.cn" target="_blank" rel="noopener">中国科学技术大学</a></span>' +
+    '<span>'+cfg.address.zh+' · <a href="mailto:'+cfg.email.zh+'">'+cfg.email.zh+'</a></span>';
+})();
+</script>
+</body>
+</html>
